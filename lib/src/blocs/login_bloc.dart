@@ -1,9 +1,7 @@
 import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 
 import 'package:bogo_ambiental_app_movil/src/validators/validators.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:rxdart/streams.dart';
-import 'package:rxdart/subjects.dart';
 
 class LoginBloc with Validators {
 
@@ -20,6 +18,11 @@ class LoginBloc with Validators {
   // Insertar valores al Stream
   Function(String) get changeEmail    => _emailController.sink.add;
   Function(String) get changePassword => _passwordController.sink.add;
+
+  // Obtener ultimo valor ingresado
+  String get email => _emailController.value;
+  String get password => _passwordController.value;
+
 
   dispose() {
     _emailController?.close();

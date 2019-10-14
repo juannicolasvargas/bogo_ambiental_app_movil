@@ -1,5 +1,8 @@
-import 'package:bogo_ambiental_app_movil/src/blocs/provider.dart';
 import 'package:flutter/material.dart';
+
+import 'package:bogo_ambiental_app_movil/src/blocs/provider.dart';
+import 'package:bogo_ambiental_app_movil/src/services/user_service.dart';
+import 'package:bogo_ambiental_app_movil/src/utils/dialogs.dart';
 
 class LoginView extends StatelessWidget {
 
@@ -45,7 +48,7 @@ class LoginView extends StatelessWidget {
   Widget _loginForm(Size size, BuildContext context) {
 
     final bloc = Provider.of(context);
-
+    // final prefs = new UserPreferences();
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -75,7 +78,7 @@ class LoginView extends StatelessWidget {
                 SizedBox(height: 30.0),
                 _createPasswordInput(bloc),
                 SizedBox(height: 30.0),
-                _createButtonLogin(bloc)
+                _createButtonLogin(bloc, context)
               ],
             ),
           ),
@@ -154,7 +157,7 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  Widget _createButtonLogin(LoginBloc bloc) {
+  Widget _createButtonLogin(LoginBloc bloc, BuildContext context) {
     return StreamBuilder(
       stream: bloc.forValidStream ,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -165,7 +168,7 @@ class LoginView extends StatelessWidget {
           elevation: 0.0,
           color: Color.fromRGBO(63, 63, 156, 1.0),
           textColor: Colors.white,
-          onPressed: snapshot.hasData ? () {} : null,
+          onPressed: snapshot.hasData ? ()=> _loginUser(bloc, context) : null,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
             child: Text('Ingresar', style: TextStyle(fontSize: 17.0),)
@@ -174,6 +177,15 @@ class LoginView extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future _loginUser(LoginBloc bloc, BuildContext context) async {
+    final response = await UserService().createLogin(bloc.email, bloc.password);
+    if (response['status']) {
+      Navigator.pushReplacementNamed(context, 'home');
+    }else{
+      showAlertExample(context, response['error']);
+    }
   }
 
 }
