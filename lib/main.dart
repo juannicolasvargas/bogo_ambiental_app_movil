@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
         ),
         routes: getRoutes(),
         initialRoute: 'login'
-        // home: MyHomePage(title: 'Flutter Demo Home Page'),
       )
     );
   }

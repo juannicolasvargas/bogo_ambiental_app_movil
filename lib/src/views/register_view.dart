@@ -4,7 +4,7 @@ import 'package:bogo_ambiental_app_movil/src/blocs/provider.dart';
 import 'package:bogo_ambiental_app_movil/src/services/user_service.dart';
 import 'package:bogo_ambiental_app_movil/src/utils/dialogs.dart';
 
-class LoginView extends StatelessWidget {
+class RegisterView extends StatelessWidget {
 
   final _styleName = TextStyle(color: Colors.white, fontSize: 40.0);
 
@@ -39,16 +39,15 @@ class LoginView extends StatelessWidget {
         Positioned(child: _circleBackground(),top: 90.0,left: 30.0),
         Positioned(child: _circleBackground(),top: -40.0,right: -30.0),
         _createBackgroundTitle(),
-        _loginForm(size, context)
+        _registerForm(size, context)
       ],
     );
 
   }
 
-  Widget _loginForm(Size size, BuildContext context) {
+  Widget _registerForm(Size size, BuildContext context) {
 
     final bloc = Provider.of(context);
-    // final prefs = new UserPreferences();
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -72,19 +71,23 @@ class LoginView extends StatelessWidget {
             ),
             child: Column(
               children: <Widget>[
-                Text('Ingresar', style: TextStyle(fontSize: 20.0)),
+                Text('Crear cuenta', style: TextStyle(fontSize: 20.0)),
                 SizedBox(height: 60.0),
                 _createEmailInput(bloc),
                 SizedBox(height: 30.0),
+                _createNameInput(bloc),
+                SizedBox(height: 20.0),
+                _createLastNameInput(bloc),
+                SizedBox(height: 20.0),
                 _createPasswordInput(bloc),
                 SizedBox(height: 30.0),
-                _createButtonLogin(bloc, context)
+                _createButtonRegister(bloc, context)
               ],
             ),
           ),
           FlatButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, 'register'),
-            child: Text('¿Todavia no tienes cuenta? Registrate'),
+            onPressed: ()=> Navigator.pushReplacementNamed(context, 'login'),
+            child: Text('¿Ya tienes cuenta? Ingresa'),
           ),
           SizedBox(height: 100.0)
         ],
@@ -160,9 +163,51 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  Widget _createButtonLogin(LoginBloc bloc, BuildContext context) {
+  Widget _createNameInput(LoginBloc bloc) {
     return StreamBuilder(
-      stream: bloc.forValidStream ,
+      stream: bloc.nameStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        return Container(
+          margin: EdgeInsets.only(right: 20.0, left: 20.0),
+          child: TextField(
+            maxLength: 20,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Nombre',
+              suffixIcon: Icon(Icons.person),
+              errorText: snapshot.error
+            ),
+            onChanged: bloc.changeName,
+          ),
+        );
+      },
+    );
+  }
+
+    Widget _createLastNameInput(LoginBloc bloc) {
+    return StreamBuilder(
+      stream: bloc.lastNameStream,
+      builder: (BuildContext context, AsyncSnapshot snapshot){
+        return Container(
+          margin: EdgeInsets.only(right: 20.0, left: 20.0),
+          child: TextField(
+            maxLength: 20,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Apellido',
+              suffixIcon: Icon(Icons.accessibility),
+              errorText: snapshot.error
+            ),
+            onChanged: bloc.changeLastName,
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _createButtonRegister(LoginBloc bloc, BuildContext context) {
+    return StreamBuilder(
+      stream: bloc.forRegisterValidStream ,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return RaisedButton(
           shape: RoundedRectangleBorder(
@@ -171,10 +216,10 @@ class LoginView extends StatelessWidget {
           elevation: 0.0,
           color: Color.fromRGBO(63, 63, 156, 1.0),
           textColor: Colors.white,
-          onPressed: snapshot.hasData ? ()=> _loginUser(bloc, context) : null,
+          onPressed: snapshot.hasData ? ()=> _createUser(bloc, context) : null,
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-            child: Text('Ingresar', style: TextStyle(fontSize: 17.0),)
+            child: Text('Crear cuenta', style: TextStyle(fontSize: 17.0),)
           ),
         
         );
@@ -182,13 +227,17 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  Future _loginUser(LoginBloc bloc, BuildContext context) async {
-    final response = await UserService().createLogin(bloc.email, bloc.password);
+  Future _createUser(LoginBloc bloc, BuildContext context) async {
+    final response = await UserService().createRegister(
+      bloc.email,
+      bloc.name,
+      bloc.lastName,
+      bloc.password
+      );
     if (response['status']) {
       Navigator.pushReplacementNamed(context, 'home');
     }else{
       showAlertExample(context, response['error']);
     }
   }
-
 }
