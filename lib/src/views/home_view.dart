@@ -1,40 +1,65 @@
-import 'package:bogo_ambiental_app_movil/src/widgets/menu_drawer_widget.dart';
+import 'package:bogo_ambiental_app_movil/src/views/dashboard_view.dart';
+import 'package:bogo_ambiental_app_movil/src/views/settings_view.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 
-import 'package:bogo_ambiental_app_movil/src/shared_preferences/user_preferences.dart';
-
 class HomeView extends StatefulWidget {
-  HomeView({Key key}) : super(key: key);
-
-  _HomeViewState createState() => _HomeViewState();
+  @override
+  _HomeViewState createState() => new _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  final _prefs = new UserPreferences();
-
+  int _page = 0;
+  PageController _c;
+  @override
+  void initState(){
+    _c =  new PageController(
+      initialPage: _page,
+    );
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-        backgroundColor: Color.fromRGBO(63, 200, 156, 1.0)),
-      drawer: MenuDrawerWidget(),
-      body: Column(        
+    return new Scaffold(
+      bottomNavigationBar: _createNavBar(),
+      body: new PageView(
+        controller: _c,
+        onPageChanged: (newPage){
+          setState((){
+            this._page=newPage;
+          });
+        },
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(top: 40.0),
-            child: Center(child: Text('Bienvenido ${_prefs.name}')),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 40.0),
-            child: Center(child: Text('Numero id ${_prefs.id}')),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 40.0),
-            child: Center(child: Text('Apellido ${_prefs.lastName}')),
-          ),
-        ],            
+          DashboardView(),
+          SettingsView(),
+          SettingsView()
+        ],
       ),
     );
+  }
+
+  Widget _createNavBar() {
+    return BottomNavyBar(
+    selectedIndex: _page,
+    showElevation: true, // use this to remove appBar's elevation
+    onItemSelected: (index) {
+      this._c.animateToPage(index,duration: const Duration(milliseconds: 500),curve: Curves.easeInOut);
+    },
+    items: [
+      BottomNavyBarItem(
+        icon: Icon(Icons.home),
+        title: Text('Inicio'),
+        // activeColor: Colors.black,
+      ),
+      BottomNavyBarItem(
+        icon: Icon(Icons.import_contacts),
+        title: Text('Retos')
+      ),
+      BottomNavyBarItem(
+        icon: Icon(Icons.settings),
+        title: Text('Ajustes')
+      ),
+    ],
+  );
   }
 }

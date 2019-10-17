@@ -2,22 +2,16 @@ import 'package:bogo_ambiental_app_movil/src/services/user_service.dart';
 import 'package:bogo_ambiental_app_movil/src/utils/dialogs.dart';
 import 'package:flutter/material.dart';
 
-class MenuDrawerWidget extends StatelessWidget {
+class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Ajustes'),
+        backgroundColor: Color.fromRGBO(63, 200, 156, 1.0)
+        ),
+      body: ListView(
         children: <Widget>[
-          DrawerHeader(
-            child: Container(),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/menu-img.jpg'),
-                fit: BoxFit.cover 
-              )
-            ),
-          ),
           ListTile(
             leading: Icon(Icons.highlight_off, color: Colors.blue,),
             title: Text('Cerrar sesión'),
@@ -25,7 +19,6 @@ class MenuDrawerWidget extends StatelessWidget {
           )
         ],
       ),
-
     );
   }
 
@@ -34,7 +27,7 @@ class MenuDrawerWidget extends StatelessWidget {
     if (response['status']) {
       Navigator.pop(context);
       Navigator.pushReplacementNamed(context, 'login');
-    }else{
+    }else {
       showAlertExample(context, response['error']);
     }
   }
