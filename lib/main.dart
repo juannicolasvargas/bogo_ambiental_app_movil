@@ -11,14 +11,16 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final prefs = new UserPreferences();
+  
   @override
   Widget build(BuildContext context) {
     return Provider(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Bogota ambiental',
+        title: 'Bogotá ambiental',
         theme: ThemeData(
-          primaryColor: Color.fromRGBO(63, 63, 156, 1.0)
+          primaryColor: Color.fromRGBO(90, 180, 178, 1.0)
         ),
         routes: getRoutes(),
         initialRoute: 'login'

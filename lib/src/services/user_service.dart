@@ -51,6 +51,47 @@ class UserService {
     }
   }
 
+  Future signOut() async {
+    var client = new http.Client();
+    try {
+      var url = 'https://bogo-ambiental-api.herokuapp.com/api/v1/auth/sign_out';
+      final response = await client.delete(url, headers: _getHeader());
+      var jsonResponse = json.decode(response.body);
+      if (response.statusCode == 200) {        
+        return { 'status': _destroyDataPreferences() };
+      } else {
+        return { 'status': false, 'error': jsonResponse['errors'][0] };
+      }
+    } catch (e) {
+    } finally {
+      client.close();
+    }
+  }
+
+  Map<String, String> _getHeader() {
+    Map<String, String> headers = new Map();
+    headers['access-token'] = _prefs.token;
+    headers['client'] = _prefs.client;
+    headers['uid'] = _prefs.uid;
+    headers['token-type'] = _prefs.type;
+    return headers;
+  }
+
+  bool _destroyDataPreferences() {
+    try {
+      _prefs.token = null;
+      _prefs.client = null;
+      _prefs.uid = null;
+      _prefs.type = null;
+      _prefs.id = null;
+      _prefs.name = null;
+      _prefs.lastName = null;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   bool _saveDataPreferences(Map<String, String> headers, UserModel user) {
     try {
       _prefs.token = headers['access-token'];

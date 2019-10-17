@@ -30,8 +30,8 @@ class LoginView extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: LinearGradient(
                colors: <Color> [
-                 Color.fromRGBO(63, 63, 156, 1.0),
-                 Color.fromRGBO(90, 70, 178, 1.0),
+                 Color.fromRGBO(63, 200, 156, 1.0),
+                 Color.fromRGBO(90, 180, 178, 1.0),
                ]
             )
           ),
@@ -96,7 +96,7 @@ class LoginView extends StatelessWidget {
     return Column(
         children: <Widget>[
           SizedBox(width: double.infinity, height: 90.0,),
-          Text('Bogota',style: _styleName),
+          Text('Bogotá',style: _styleName),
             Text('Ambiental',style: _styleName)
         ],
       );
@@ -169,7 +169,7 @@ class LoginView extends StatelessWidget {
             borderRadius: BorderRadius.circular(5.0),
           ),
           elevation: 0.0,
-          color: Color.fromRGBO(63, 63, 156, 1.0),
+          color: Color.fromRGBO(90, 180, 178, 1.0),
           textColor: Colors.white,
           onPressed: snapshot.hasData ? ()=> _loginUser(bloc, context) : null,
           child: Container(
