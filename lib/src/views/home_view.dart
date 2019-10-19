@@ -18,6 +18,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final _prefs = new UserPreferences();
   File _imageUser;
+  bool _isLoadingImage = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +32,13 @@ class _HomeViewState extends State<HomeView> {
       drawer: MenuDrawerWidget(),
       body: ListView(
         children: <Widget>[
-          FlatButton(
-            padding: EdgeInsets.zero,
-            onPressed: () => _settingModalBottomSheet(context),
-            child: FadeInImage(
-              image: NetworkImage(_getUserImage()),
-              placeholder: AssetImage('assets/image-loading.gif'),
-              height: 250.0,
-              fadeInDuration: Duration(milliseconds: 200),
-              fit: BoxFit.cover
-            ),
+          SizedBox(height: 10.0,),
+          Stack(
+            children: <Widget>[
+              _imageUserButton(),
+              Positioned(child: _isLoadingImage ? progresIndicatorImage() : Center(), bottom: 22.0,left: 120.0),
+              Positioned(child: Icon(Icons.add_circle, color: Colors.blue, size: 27.0), bottom: 0.0,left: 230.0),
+            ],
           ),
           SizedBox(height: 20.0),
           ListTile(
@@ -92,6 +90,27 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  Widget _imageUserButton() {
+    return Center(
+      child: FlatButton(
+        padding: EdgeInsets.zero,
+        onPressed: () => _settingModalBottomSheet(context),
+        child: ClipRRect(
+          borderRadius: new BorderRadius.circular(90.0),
+          child: FadeInImage(
+            image: NetworkImage(_getUserImage()),
+            placeholder: AssetImage('assets/image-loading.gif'),
+            width: 180.0,
+            height: 180.0,
+            fadeInCurve: Curves.easeInCirc,
+            fadeInDuration: Duration(milliseconds: 200),
+            fit: BoxFit.cover
+          ),
+        ),
+      ),
+    );
+  }
+
   String _getUserImage() {
     String imgDefaultUrl = 'https://bogoambientalstorage.s3.amazonaws.com/no-image.png';
     return _prefs.image != '' ? _prefs.image : imgDefaultUrl;
@@ -131,17 +150,27 @@ class _HomeViewState extends State<HomeView> {
   }
 
   _uploadImage( ImageSource resource) async {
+    Navigator.of(context).pop();
     _imageUser = await ImagePicker.pickImage(
       source: resource
     );
     if (_imageUser != null) {
+      _isLoadingImage = true;
       final response = await UserService().uploadAvatarImage(_imageUser);
       if (response['status']) {
-        Navigator.of(context).pop();
+        _isLoadingImage = false;
       }else {
       showAlertExample(context, response['error']);
       }
     }
     setState(() {});
+  }
+
+  Widget progresIndicatorImage () {
+    return SizedBox(
+      child: CircularProgressIndicator(),
+      width: 130.0,
+      height: 130.0,
+      );
   }
 }

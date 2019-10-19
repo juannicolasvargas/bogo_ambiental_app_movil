@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:bogo_ambiental_app_movil/src/services/user_service.dart';
 import 'package:bogo_ambiental_app_movil/src/routes/routes.dart';
 import 'package:bogo_ambiental_app_movil/src/blocs/provider.dart';
 import 'package:bogo_ambiental_app_movil/src/shared_preferences/user_preferences.dart';
@@ -18,13 +19,17 @@ class MyApp extends StatelessWidget {
     return Provider(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Bogotá ambiental',
+        title: 'Bogotá Ambiental',
         theme: ThemeData(
           primaryColor: Color.fromRGBO(90, 180, 178, 1.0)
         ),
         routes: getRoutes(),
-        initialRoute: 'login'
+        initialRoute: _initialRoute()
       )
     );
+  }
+
+  String _initialRoute() {
+    return UserService().isUserExists() ? 'home' : 'login';
   }
 }

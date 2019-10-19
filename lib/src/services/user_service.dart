@@ -9,6 +9,24 @@ import 'package:mime_type/mime_type.dart';
 class UserService {
   final _prefs = new UserPreferences();
 
+  //Valida que existe un usuario
+  bool isUserExists() {
+    if (_isNotEmpty(_prefs.token) &&
+        _isNotEmpty(_prefs.client) &&
+        _isNotEmpty(_prefs.uid) &&
+        _isNotEmpty(_prefs.name)
+       ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool _isNotEmpty(resource) {
+    return resource != '';
+  }
+
+  // Futures de peticiones al Back-end
   Future createLogin(String email, String password) async {
     var client = new http.Client();
     try {
