@@ -116,6 +116,7 @@ class UserService {
       _prefs.id = null;
       _prefs.name = null;
       _prefs.lastName = null;
+      _prefs.image = null;
       return true;
     } catch (e) {
       return false;
@@ -131,7 +132,7 @@ class UserService {
       _prefs.id = user.id;
       _prefs.name = user.name;
       _prefs.lastName = user.lastName;
-
+      _prefs.image = user.image;
       return true;
 
     } catch (e) {

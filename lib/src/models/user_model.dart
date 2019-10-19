@@ -13,7 +13,7 @@ class UserModel {
       email: json['email'],
       name: json['name'],
       lastName: json['last_name'],
-      image: ''
+      image: json['image']
     );
   }
 }
