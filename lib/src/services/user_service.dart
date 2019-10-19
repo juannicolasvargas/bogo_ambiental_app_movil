@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:bogo_ambiental_app_movil/src/shared_preferences/user_preferences.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:http_parser/http_parser.dart';
 import 'package:bogo_ambiental_app_movil/src/models/user_model.dart';
+import 'package:mime_type/mime_type.dart';
 
 class UserService {
   final _prefs = new UserPreferences();
@@ -65,6 +67,34 @@ class UserService {
     } catch (e) {
     } finally {
       client.close();
+    }
+  }
+
+  Future uploadAvatarImage(File image) async {
+    try {
+      final url = Uri.parse('https://bogo-ambiental-api.herokuapp.com/api/v1/avatar_images');
+    final minType = mime(image.path).split('/');
+
+    final imageUploadRequest = http.MultipartRequest('POST', url);
+    final file = await http.MultipartFile.fromPath(
+      'avatar_image', image.path,
+      contentType: MediaType(minType[0], minType[1])
+    );
+
+    imageUploadRequest.headers.addAll(_getHeader());
+    imageUploadRequest.files.add(file);
+    
+    final streamResponse = await imageUploadRequest.send();
+    final response = await http.Response.fromStream(streamResponse);
+    if (response.statusCode == 200) {
+      _prefs.image = response.body;
+      return { 'status': true };
+    }else {
+      final jsonError = json.decode(response.body);
+      return { 'status': false, 'error': jsonError['errors'][0] };
+    }
+    } catch (e) {
+      return { 'status': false, 'error': 'Ha ocurrido un error inesperado.' };
     }
   }
 

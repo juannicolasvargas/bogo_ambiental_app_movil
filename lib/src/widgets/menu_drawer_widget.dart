@@ -1,7 +1,4 @@
-import 'package:bogo_ambiental_app_movil/src/services/user_service.dart';
-import 'package:bogo_ambiental_app_movil/src/utils/dialogs.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 
 class MenuDrawerWidget extends StatelessWidget {
   @override
@@ -22,21 +19,11 @@ class MenuDrawerWidget extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.highlight_off, color: Colors.blue,),
             title: Text('Cerrar sesión'),
-            onTap: () => _signOutUser(context),
+            onTap: () {},
           )
         ],
       ),
 
     );
-  }
-
-  void _signOutUser(BuildContext context) async {
-    var response = await UserService().signOut();
-    if (response['status']) {
-      Navigator.pop(context);
-      Navigator.pushReplacementNamed(context, 'login');
-    }else{
-      showAlertExample(context, response['error']);
-    }
   }
 }
