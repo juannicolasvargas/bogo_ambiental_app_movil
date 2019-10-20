@@ -28,7 +28,8 @@ class _HomeViewState extends State<HomeView> {
           SignOutButtonWidget()
         ],
         title: Text('Inicio'),
-        backgroundColor: Color.fromRGBO(63, 200, 156, 1.0)),
+        // backgroundColor: Color.fromRGBO(63, 200, 156, 1.0)
+      ),
       drawer: MenuDrawerWidget(),
       body: ListView(
         children: <Widget>[
@@ -36,7 +37,6 @@ class _HomeViewState extends State<HomeView> {
           Stack(
             children: <Widget>[
               _imageUserButton(),
-              Positioned(child: _isLoadingImage ? progresIndicatorImage() : Center(), bottom: 22.0,left: 120.0),
               Positioned(child: Icon(Icons.add_circle, color: Colors.blue, size: 27.0), bottom: 0.0,left: 230.0),
             ],
           ),
@@ -156,10 +156,13 @@ class _HomeViewState extends State<HomeView> {
     );
     if (_imageUser != null) {
       _isLoadingImage = true;
+      _onLoading(context);
       final response = await UserService().uploadAvatarImage(_imageUser);
       if (response['status']) {
         _isLoadingImage = false;
+        Navigator.of(context).pop();
       }else {
+        Navigator.of(context).pop();
       showAlertExample(context, response['error']);
       }
     }
@@ -169,8 +172,29 @@ class _HomeViewState extends State<HomeView> {
   Widget progresIndicatorImage () {
     return SizedBox(
       child: CircularProgressIndicator(),
-      width: 130.0,
-      height: 130.0,
+      width: 60.0,
+      height: 60.0,
       );
   }
+
+void _onLoading(BuildContext context) {
+   showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+          progresIndicatorImage(),
+          SizedBox(height: 15.0,),
+          Text("Cargando imagen"),
+          ],
+        ),
+      );
+    },
+  );
+}
+
 }
