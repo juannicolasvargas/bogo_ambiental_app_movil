@@ -51,7 +51,7 @@ class _HomeViewState extends State<HomeView> {
           ),
           SizedBox(height: 20.0),
           ListTile(
-            onTap: () {},
+            onTap: () => Navigator.pushNamed(context, 'wetlands_amp'),
             contentPadding: EdgeInsets.symmetric(horizontal: 20.0),
             title: Text('Humedal mas cercano'),
             subtitle: Text('Busca el humedal que prefieras visitar'),

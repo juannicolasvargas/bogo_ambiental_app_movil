@@ -28,6 +28,7 @@ dependencies:
   http: ^0.12.0+2
   image_picker: ^0.6.1+8
   mime_type:
+  google_maps_flutter:
 
 dev_dependencies:
   flutter_test:
