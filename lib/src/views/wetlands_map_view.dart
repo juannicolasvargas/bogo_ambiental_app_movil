@@ -3,8 +3,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class WetlandsMapView extends StatelessWidget {
+class WetlandsMapView extends StatefulWidget {
+  @override
+  _WetlandsMapViewState createState() => _WetlandsMapViewState();
+}
+
+class _WetlandsMapViewState extends State<WetlandsMapView> {
   final Completer _googleController = Completer();
+  double zoomNumber = 12.0;
+  double lat = 4.60971;
+  double long = -74.08175;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +22,7 @@ class WetlandsMapView extends StatelessWidget {
       ),
       body: Stack(
         children: <Widget>[
-          _mapDefault(),
+          _mapDefault()
         ],
       ),
     );
@@ -36,12 +45,9 @@ class WetlandsMapView extends StatelessWidget {
         ),
       ),
     );
-
   }
 
   Widget _mapDefault() {
-    double lat = 4.60971;
-    double long = -74.08175;
     return GoogleMap(
       myLocationButtonEnabled: true,
       myLocationEnabled: true,
@@ -50,7 +56,7 @@ class WetlandsMapView extends StatelessWidget {
       tiltGesturesEnabled: true,
       zoomGesturesEnabled: true,
       initialCameraPosition: CameraPosition(
-        zoom: 12.0,
+        zoom: zoomNumber,
         target: LatLng(lat, long)
       ),
       onMapCreated: (GoogleMapController controller) {
@@ -64,9 +70,9 @@ class WetlandsMapView extends StatelessWidget {
 
   Marker _markerOne() {
     return Marker(
-      markerId: MarkerId('prueba'),
+      markerId: MarkerId('Humedal bogota'),
       position: LatLng(4.608967757103997, -74.08313838134988),
-      infoWindow: InfoWindow(title: 'pruebisima', snippet: 'asnjsadbajsndbasn'),
+      infoWindow: InfoWindow(title: 'Humedal bogota', snippet: 'asnjsadbajsndbasn'),
       icon: BitmapDescriptor.defaultMarkerWithHue(
         BitmapDescriptor.hueRed
       )
