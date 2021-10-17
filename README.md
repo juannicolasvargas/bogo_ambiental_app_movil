@@ -1,6 +1,6 @@
 # bogo_ambiental_app_movil
 
-A new Flutter project.
+mobile application for information on wetlands in bogota, colombia.
 
 ## Getting Started
 
